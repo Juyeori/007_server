@@ -50,7 +50,6 @@ async def create_upload_file(item: dict = Body(...)):
     engine = engineconn()
     session = engine.sessionmaker()
 
-    # 여기 해야함
     teamname = item.get("teamname")
     username = item.get("username")
     
@@ -85,9 +84,19 @@ def changeToImage(img):
     img = np.array(img)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     
-    imgResize = cv2.resize(img, (300, 500))
+    # imgResize = cv2.resize(img, (984, 3000))
+    h, w, c = img.shape
 
-    return imgResize
+    black_img = np.zeros((512,512,3), np.uint8)
+    # cv2.imshow('black', black_img)
+    black_img = cv2.resize(black_img, (984, 3000-h))
+
+    img = cv2.vconcat([img, black_img])
+    cv2.imshow('img', img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+    print(img.shape)
+    return img
 
 def get_image(list):
     image = changeToImage(list[0])
